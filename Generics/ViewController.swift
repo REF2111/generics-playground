@@ -8,13 +8,29 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+struct Todo: Codable {
+    let userId: Int
+    let id: Int
+    let title: String
+    let completed: Bool
+}
 
+class ViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
+        NetworkManager.execute(url: url) { (result: Result<Todo, SuperError>) in
+            
+            switch result {
+            case .success(let todo):
+                print(todo)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
-
-
+    
 }
 
