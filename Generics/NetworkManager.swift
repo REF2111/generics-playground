@@ -8,29 +8,6 @@
 
 import Foundation
 
-enum SuperError: Error {
-    case shit
-}
-
-class CommunicationManager {
-    
-    static let shared = CommunicationManager()
-    private init() {}
-    
-    private func perform(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        
-        let task = URLSession.shared.dataTask(with: request, completionHandler: completionHandler)
-        task.resume()
-    }
-    
-    func perform(for url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        
-        let request = URLRequest(url: url)
-        perform(with: request, completionHandler: completionHandler)
-    }
-    
-}
-
 struct NetworkManager {
     
     static internal func execute<T: Decodable>(url: URL, data: Data? = nil, param: Int64? = nil, completion: @escaping (Result<T, SuperError>) -> Void) {
@@ -39,7 +16,7 @@ struct NetworkManager {
             
             if let httpRepsonse = response as? HTTPURLResponse {
                 guard let data = data else {
-                    completion(.failure(.shit))
+                    completion(.failure(.superFail))
                     return
                 }
                 
@@ -49,13 +26,13 @@ struct NetworkManager {
                         let result = try JSONDecoder().decode(T.self, from: data)
                         completion(.success(result))
                     } catch {
-                        completion(.failure(.shit))
+                        completion(.failure(.superFail))
                     }
                 default:
-                    completion(.failure(.shit))
+                    completion(.failure(.superFail))
                 }
             } else {
-                completion(.failure(.shit))
+                completion(.failure(.superFail))
             }
         }
     }
